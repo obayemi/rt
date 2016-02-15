@@ -5,14 +5,7 @@
 
 #include "Plane.hh"
 #include "Exceptions.hh"
-
-
-
-
-template<typename T>
-T			solver2(T a, T b) {
-    return -b / a;
-}
+#include "Solver1.hh"
 
 
 Plane::Plane(): Mesh() {}
@@ -27,11 +20,8 @@ Plane::~Plane() {}
 Intersection			Plane::intersect(const Ray &ray) const {
     Ray					localRay = this->localize(ray);
 
-    //std::cout << "localized " << ray << " to " << localRay << std::endl;
+    double distance = Solver1(localRay.getDirection().x, localRay.getOrigin().x).solve().front();
 
-    double distance = solver2<double>(localRay.getDirection().y, localRay.getOrigin().y);
-
-    std::cout << distance << std::endl;
     if (distance > 0)
         return Intersection(
                 Position(
@@ -47,8 +37,28 @@ Intersection			Plane::intersect(const Ray &ray) const {
                 *this,
                 ray,
                 localRay,
-                Direction(0, 1, 0),
+                Direction(1, 0, 0),
                 distance
                 );
     throw NoIntersect();
+}
+
+Plane						*Plane::fromJson(const Json::Value &plane) {
+    return new Plane(
+            Position(
+                plane["position"]["x"].asDouble(),
+                plane["position"]["y"].asDouble(),
+                plane["position"]["z"].asDouble()
+             ),
+            Rotation(Rotation3(
+                plane["rotation"]["x"].asDouble(),
+                plane["rotation"]["y"].asDouble(),
+                plane["rotation"]["z"].asDouble()
+             )),
+            Color(
+                    plane["color"]["color"]["r"].asUInt(),
+                    plane["color"]["color"]["g"].asUInt(),
+                    plane["color"]["color"]["b"].asUInt()
+                 )
+            );
 }

@@ -34,5 +34,11 @@ class NoIntersect : public RenderException
         virtual char const * what() const throw();
 };
 
+class InvalidScene: public RenderException
+{
+    public:
+        virtual char const * what() const throw();
+};
+
 #endif // _EXCEPTIONS_HH
 

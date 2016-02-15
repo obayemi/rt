@@ -20,6 +20,7 @@ class				Plane : public Mesh {
         ~Plane();
 
         Intersection	intersect(const Ray &ray) const;
+        static Plane	*fromJson(const Json::Value &plane);
 };
 
 #endif // _PLANE_HH

@@ -1,0 +1,117 @@
+{
+    "objects": [
+        {
+            "name": "Camera01",
+            "type": "Camera",
+            "position": {
+                "x": 1.5,
+                "y": 0,
+                "z": -20
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "focal length": 45,
+            "canevas": {
+                "width": 21,
+                //"height": 16
+                "height": 21
+            },
+            "MSAA": 1,
+            "resolution": {
+                "width": 800,
+                "height": 800
+            },
+            "background": {
+                "type": "Color",
+                "color": {
+                    "r": 20,
+                    "g": 20,
+                    "b": 20
+                }
+            }
+        },
+        {
+            "type": "Light",
+            "position": {"x": 20, "y": 10, "z": 0 },
+            "rotation": {"x": 0, "y": 0, "z": 0 },
+            "color": {
+                "type": "Color",
+                "color": {
+                    "r": 255,
+                    "g": 255,
+                    "b": 255
+                }
+            }
+        },
+        {
+            "type": "Light",
+            "position": {"x": 3, "y": -5, "z": -1 },
+            "rotation": {"x": 0, "y": 0, "z": 0 },
+            "color": {
+                "type": "Color",
+                "color": {
+                    "r": 255,
+                    "g": 255,
+                    "b": 255
+                }
+            }
+        },
+        {
+            "type": "Mesh",
+            "mesh": "Plane",
+            "position": {"x": 0, "y": 0, "z": 0 },
+            "rotation": {"x": 0, "y": 0, "z": 0 },
+            "color": {
+                "type": "Color",
+                "color": {
+                    "r": 220,
+                    "g": 20,
+                    "b": 60
+                }
+            }
+        },
+        {
+            "type": "Mesh",
+            "mesh": "Sphere",
+            "position": {"x": 1.2, "y": 1, "z": -1 },
+            "rotation": {"x": 0, "y": 0, "z": 0 },
+            "radius": 0.2,
+            "color": {
+                "type": "Color",
+                "color": {
+                    "r": 255,
+                    "g": 218,
+                    "b": 185
+                }
+            }
+        },
+        {
+            "type": "Mesh",
+            "mesh": "Sphere",
+            "position": {"x": 1, "y": 0, "z": 0 },
+            "rotation": {"x": 0, "y": 0, "z": 0 },
+            "radius": 1,
+            "color": {
+                "type": "Color",
+                "color": {
+                    "r": 125,
+                    "g": 38,
+                    "b": 205
+                }
+            }
+        }
+    ],
+    "textures": {
+        "CameraBackground": {
+            "type": "Color",
+            "color": "0x111111ff"
+        },
+        "Blue": {
+            "type": "Color",
+            "color": "0x5555ffff"
+        }
+    }
+}

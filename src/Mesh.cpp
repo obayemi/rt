@@ -7,7 +7,7 @@
 
 Color		Mesh::defaultColor = Color(0x777777ff);
 
-Mesh::Mesh(): Object(), _color(defaultColor) {}
+Mesh::Mesh(): Object(), _color(Mesh::defaultColor) {}
 
 Mesh::Mesh(const Mesh &other): Object(other), _color(other._color) {}
 

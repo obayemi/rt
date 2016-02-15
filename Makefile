@@ -2,16 +2,23 @@ NAME		= rt
 
 SRC_NAMES	= main.cpp \
 			  Ray.cpp \
-			  Camera.cpp \
 			  Exceptions.cpp \
+			  RotMatrix.cpp \
+			  Intersection.cpp \
+			  Color.cpp \
 			  Scene.cpp \
 			  Object.cpp \
-			  RotMatrix.cpp \
+			  Camera.cpp \
 			  CameraRay.cpp \
-			  Color.cpp \
-			  Intersection.cpp \
+			  Light.cpp \
+			  Mesh.cpp \
 			  Plane.cpp \
-			  Mesh.cpp
+			  Sphere.cpp \
+			  Solver.cpp \
+			  Solver1.cpp \
+			  Solver2.cpp
+SRC_NAMES	+= jsoncpp/jsoncpp.cpp
+
 SRCDIR		= src/
 
 SRC			= $(addprefix src/,$(SRC_NAMES))

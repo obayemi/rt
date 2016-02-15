@@ -2,15 +2,19 @@
 #define _SOLVER_HH
 
 /*!
- * \file Camera.hh
+ * \file Solver.hh
  * \author obayemi
  */
 
 #include <list>
 
-class		Solver {
+class									Solver {
+    protected:
+        std::list<double>		_result;
+
     public:
+        virtual ~Solver() {};
         std::list<double>		solve() const;
-}
+};
 
 #endif // _SOLVER_HH

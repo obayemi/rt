@@ -6,6 +6,8 @@
  * \author obayemi
  */
 
+#include "jsoncpp/json/json.h"
+
 #include "Coordinates.hpp"
 #include "RotMatrix.hh"
 #include "Ray.hh"

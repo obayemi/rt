@@ -3,7 +3,6 @@
  * \author obayemi
  */
 
-#include <algorithm>
 //#include <functional>
 
 #include "CameraRay.hh"
@@ -26,32 +25,31 @@ Color			CameraRay::render(const Scene &scene) const {
     Intersection			*newIntersect = NULL;
 
     for (const Ray& ray : this->_rays) {
-        try {
-            for (const Mesh * const mesh: scene.getMesh()) {
-                if (!intersect) {
-                    intersect = new Intersection(mesh->intersect(ray));
+        for (const Mesh * const mesh: scene.getMesh()) {
+            try {
+                newIntersect = new Intersection(mesh->intersect(ray));
+            } catch (const NoIntersect &e) {
+                continue;
+            }
+            if (!intersect) {
+                intersect = newIntersect;
+            } else {
+                if (*newIntersect < *intersect) {
+                    delete intersect;
+                    intersect = newIntersect;
                 } else {
-                    newIntersect = new Intersection(mesh->intersect(ray));
-                    if (newIntersect < intersect) {
-                        delete intersect;
-                        intersect = newIntersect;
-                        std::cerr << "INTERSECTION!!!!!" << std::endl;
-                    } else {
-                        delete newIntersect;
-                    }
+                    delete newIntersect;
                 }
             }
-            if (!intersect)
-                throw NoIntersect();
+        }
+        if (intersect) {
             colors.push_back(intersect->render(scene));
             delete intersect;
-        } catch (NoIntersect e) {
-            colors.push_back(Color(0x111111ff)); // TODO: replace with default camera color
-            //std::cerr << e.what() << std::endl;
+        } else {
+            colors.push_back(this->_camera.background(this->_pixels));
         }
     }
-    return std::accumulate(colors.begin(), colors.end(), Color(0),
-            [](const Color &a, const Color &b) { return a + b; }) * (1.f / (double)colors.size());
+    return Color::merge(colors);
 }
 
 const std::list<Pixel>		&CameraRay::getPixels() const {

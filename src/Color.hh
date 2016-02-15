@@ -7,6 +7,7 @@
  */
 
 #include <iostream>
+#include <list>
 
 typedef unsigned char uint8;
 typedef unsigned long uint32;
@@ -38,8 +39,13 @@ class					Color {
         Color			&operator*=(double scalar);
         Color			operator*(double scalar) const;
 
+        Color			&operator*=(const Color &other);
+        Color			operator*(const Color &other) const;
+
         Color			&operator+=(const Color &other);
         Color			operator+(const Color &other) const;
+
+        static Color	merge(const std::list<Color> &colors);
 
         friend std::ostream& operator<<(std::ostream& out, const Color& color);
 };

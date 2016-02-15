@@ -17,3 +17,6 @@ char const * NotRendered::what() const throw() {
 char const * NoIntersect::what() const throw() {
     return "No Intersection found";
 }
+char const * InvalidScene::what() const throw() {
+    return "Scene file invalid";
+}

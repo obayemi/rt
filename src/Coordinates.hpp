@@ -75,6 +75,18 @@ class				Vector3 {
         Vector3(const Vector3 &orig): x(orig.x), y(orig.y), z(orig.z) {};
         ~Vector3() {};
 
+        T				length() const {
+            return (std::sqrt(
+                        this->x * this->x
+                        + this->y * this->y
+                        + this->z * this->z
+                        ));
+        }
+
+        Vector3			normalize() {
+            return (this *= (1 / this->length()));
+        }
+
         Vector3			&operator+=(const Vector3<T> &other) {
             this->x += other.x;
             this->y += other.y;
@@ -86,14 +98,23 @@ class				Vector3 {
             return (Vector3(*this) += other);
         }
 
-        Vector3			&operator*=(T value) {
+        T				operator/=(const Vector3<T> &other) {
+            return (this->x * other.x + this->y * other.y + this->z * other.z) /
+                (this->length() * other.length());
+        }
+
+        T				operator/(const Vector3<T> &other) const {
+            return (Vector3(*this) /= other);
+        }
+
+        Vector3			&operator*=(const T &value) {
             this->x *= value;
             this->y *= value;
             this->z *= value;
             return (*this);
         }
 
-        Vector3			operator*(T value) const {
+        Vector3			operator*(const T &value) const {
             return (Vector3(*this) *= value);
         }
         
@@ -165,7 +186,7 @@ class				Quaternion {
         Quaternion			operator*(T value) const {
             return (Quaternion(*this) *= value);
         }
-        
+
         friend std::ostream& operator<<(std::ostream& out, const Quaternion& vector) {
             return out << "(" << vector.a
                 << ", "<< vector.b

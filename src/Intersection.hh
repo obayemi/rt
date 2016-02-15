@@ -41,6 +41,9 @@ class						Intersection {
 
         Color				render(const Scene &scene);
 
+        bool					operator>(double distance) const;
+        bool					operator<(double distance) const;
+
         bool					operator>(const Intersection &other) const;
         bool					operator<(const Intersection &other) const;
 };

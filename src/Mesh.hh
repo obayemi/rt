@@ -15,17 +15,17 @@ class Scene;
 class Intersection;
 
 class							Mesh : public Object {
-    private:
+    public:
         Color					_color;
 
     protected:
-        static Color					defaultColor;
+        static Color			defaultColor;
 
     public:
         Mesh();
         Mesh(const Mesh &other);
         Mesh(const Position &position, const Rotation &rotation,
-                const Color &color = Color(0x777777ff));
+                const Color &color = Mesh::defaultColor);
         virtual ~Mesh();
 
         virtual Intersection	intersect(const Ray &ray) const = 0;

@@ -5,6 +5,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <algorithm>
 
 #include "Color.hh"
 
@@ -44,14 +45,15 @@ uint8			Color::getB() const {
     return (this->_b > (uint8)-1) ? (uint8)-1 : this->_b;
 }
 uint8			Color::getA() const {
-    return (this->_a > (uint8)-1) ? (uint8)-1 : this->_a;
+    //return (this->_a > (uint8)-1) ? (uint8)-1 : this->_a;
+    return (uint8)-1;
 }
 
 Color			&Color::operator*=(double scalar) {
     this->_r *= scalar;
     this->_g *= scalar;
     this->_b *= scalar;
-    this->_a *= scalar;
+    //this->_a *= scalar;
     return (*this);
 }
 
@@ -59,11 +61,22 @@ Color			Color::operator*(double scalar) const {
     return (Color(*this) *= scalar);
 }
 
+Color			&Color::operator*=(const Color &other) {
+    this->_r = ((double)this->getR() / 255.f) * other.getR();
+    this->_g = ((double)this->getG() / 255.f) * other.getG();
+    this->_b = ((double)this->getB() / 255.f) * other.getB();
+    return *this;
+}
+
+Color			Color::operator*(const Color &other) const {
+    return (Color(*this) *= other);
+}
+
 Color			&Color::operator+=(const Color &other) {
     this->_r += other._r;
     this->_g += other._g;
     this->_b += other._b;
-    this->_a += other._a;
+    //this->_a += other._a;
     return (*this);
 }
 
@@ -82,3 +95,9 @@ std::ostream&	operator<<(std::ostream& out, const Color& color) {
         << color._a
         <<")";
 }
+
+Color			Color::merge(const std::list<Color> &colors) {
+    return std::accumulate(colors.begin(), colors.end(), Color(0),
+            [](const Color &a, const Color &b) { return a + b; }) * (1.f / (double)colors.size());
+}
+
