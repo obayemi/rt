@@ -6,6 +6,7 @@
 #include "Sphere.hh"
 #include "Exceptions.hh"
 #include "Solver2.hh"
+#include "ColorTexture.hh"
 
 
 Sphere::Sphere(): Mesh() {}
@@ -13,8 +14,8 @@ Sphere::Sphere(): Mesh() {}
 Sphere::Sphere(const Sphere &orig): Mesh(orig) {}
 
 Sphere::Sphere(const Position &position, const Rotation &rotation,
-        double radius, const Color &color):
-    Mesh(position, rotation, color), _radius(radius) {}
+        double radius, const Texture *texture):
+    Mesh(position, rotation, texture), _radius(radius) {}
 
 Sphere::~Sphere() {}
 
@@ -62,7 +63,11 @@ Intersection			Sphere::intersect(const Ray &ray) const {
     throw NoIntersect();
 }
 
-Sphere						*Sphere::fromJson(const Json::Value &sphere) {
+Mesh						*Sphere::fromJson(const Json::Value &sphere,
+        TextureMap &textures) {
+    if (textures.find(sphere["texture"]["name"].asString()) == textures.end()) {
+        textures[sphere["texture"]["name"].asString()] = new ColorTexture(sphere["texture"]);
+    }
     return new Sphere(
             Position(
                 sphere["position"]["x"].asDouble(),
@@ -75,10 +80,6 @@ Sphere						*Sphere::fromJson(const Json::Value &sphere) {
                 sphere["rotation"]["z"].asDouble()
              )),
             sphere["radius"].asDouble(),
-            Color(
-                    sphere["color"]["color"]["r"].asUInt(),
-                    sphere["color"]["color"]["g"].asUInt(),
-                    sphere["color"]["color"]["b"].asUInt()
-                 )
+            textures[sphere["texture"]["name"].asString()]
             );
 }

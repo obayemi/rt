@@ -4,19 +4,31 @@
  */
 
 #include "Mesh.hh"
+#include "ColorTexture.hh"
 
-Color		Mesh::defaultColor = Color(0x777777ff);
+Mesh::Mesh(): Object() {}
 
-Mesh::Mesh(): Object(), _color(Mesh::defaultColor) {}
-
-Mesh::Mesh(const Mesh &other): Object(other), _color(other._color) {}
+Mesh::Mesh(const Mesh &other): Object(other) {}
 
 Mesh::Mesh(const Position &position, const Rotation &rotation,
-        const Color &color):
-    Object(position, rotation), _color(color) {}
+        const Texture * const texture):
+    Object(position, rotation, texture) {}
 
 Mesh::~Mesh() {}
 
-const Color				&Mesh::getColor() const {
-    return this->_color;
+std::map<std::string, Mesh::JsonLoader*>	Mesh::_meshs;
+
+void			Mesh::registerMesh(const std::string &mesh,
+        Mesh::JsonLoader *loader) {
+    Mesh::_meshs[mesh] = loader;
+}
+
+Mesh		*Mesh::fromJson(const Json::Value &value, TextureMap &textures) {
+    if (Mesh::_meshs.find(value["mesh"].asString()) == Mesh::_meshs.end()) {
+        std::cerr << "Invalid Mesh: " << value["mesh"] << std::endl
+            << value << std::endl;
+        throw InvalidScene();
+    }
+    std::cout << "loading Mesh: " << value["mesh"] << std::endl;
+    return Mesh::_meshs[value["mesh"].asString()](value, textures);
 }

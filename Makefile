@@ -16,7 +16,11 @@ SRC_NAMES	= main.cpp \
 			  Sphere.cpp \
 			  Solver.cpp \
 			  Solver1.cpp \
-			  Solver2.cpp
+			  Solver2.cpp \
+			  ColorTexture.cpp \
+			  TypesInit.cpp \
+			  Texture.cpp \
+			  PointLight.cpp
 SRC_NAMES	+= jsoncpp/jsoncpp.cpp
 
 SRCDIR		= src/

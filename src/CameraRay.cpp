@@ -46,7 +46,7 @@ Color			CameraRay::render(const Scene &scene) const {
             colors.push_back(intersect->render(scene));
             delete intersect;
         } else {
-            colors.push_back(this->_camera.background(this->_pixels));
+            colors.push_back(this->_camera.background(this->_rays));
         }
     }
     return Color::merge(colors);

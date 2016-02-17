@@ -9,29 +9,24 @@
 #include "Object.hh"
 #include "Color.hh"
 
-/*!
- * \file Light.hh
- * \author obayemi
- */
-
 class							Light : public Object {
-    public:
-        static Color			defaultColor;
-
-    private:
-        Color					_color;
+    typedef Light *(JsonLoader)(const Json::Value &value,
+            TextureMap &textures);
 
     public:
         Light();
         Light(const Light &other);
         Light(const Position &position, const Rotation &rotation,
-                const Color &color = Light::defaultColor);
+                const Texture *texture);
         virtual ~Light();
 
-        const Color				&getColor(const Direction &origin = Direction(),
-                double distance = 0) const;
-
-        static Light					*fromJson(const Json::Value &light);
+    private:
+        static std::map<std::string, JsonLoader*>	_lights;
+    public:
+        static void			registerLight(const std::string &object,
+                JsonLoader *loader);
+        static Light		*fromJson(const Json::Value &value,
+                TextureMap &textures);
 };
 
 #endif // _LIGHT_HH

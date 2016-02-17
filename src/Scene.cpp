@@ -77,34 +77,24 @@ const std::list<Light *>	Scene::getLight() const {
 }
 
 void						Scene::loadFromJson(const Json::Value &scene ) {
+    for (const Json::Value &value: scene["textures"]) {
+        this->_textures[value["name"].asString()] = new ColorTexture(value);
+    }
     for (const Json::Value &value: scene["objects"]) {
-        if (value["type"] == Json::nullValue) {
-            std::cerr << "invalid object with no type" << std::endl
+        if (value["object"] == Json::nullValue) {
+            std::cerr << "invalid object with no object" << std::endl
                 << value << std::endl;
             throw InvalidScene();
-        } else if (value["type"].asString() == "Camera") {
-            this->addCamera(Camera::fromJson(value));
-        } else if (value["type"].asString() == "Mesh") {
-            if (value["mesh"] == Json::nullValue) {
-                std::cerr << "invalid mesh with no type" << std::endl
-                    << value << std::endl;
-                throw InvalidScene();
-            } else if (value["mesh"].asString() == "Plane") {
-                this->addMesh(Plane::fromJson(value));
-            } else if (value["mesh"].asString() == "Sphere") {
-                this->addMesh(Sphere::fromJson(value));
-            } else {
-                std::cerr << "invalid mesh type: " << value["mesh"] << std::endl
-                    << value << std::endl;
-                throw InvalidScene();
-            }
-        } else if (value["type"] == "Light") {
-            this->addLight(Light::fromJson(value));
+        } else if (value["object"].asString() == "Camera") {
+            this->addCamera(Camera::fromJson(value, this->_textures));
+        } else if (value["object"].asString() == "Mesh") {
+            this->addMesh(Mesh::fromJson(value, this->_textures));
+        } else if (value["object"] == "Light") {
+            this->addLight(Light::fromJson(value, this->_textures));
         } else {
-            std::cerr << "invalid object type: " << value["type"] << std::endl
+            std::cerr << "invalid object: " << value["object"] << std::endl
                 << value << std::endl;
             throw InvalidScene();
         }
-        std::cout << "new " << value["type"] << std::endl;
     }
 }

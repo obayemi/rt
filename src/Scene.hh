@@ -8,10 +8,13 @@
 
 #include <list>
 #include <string>
+#include <map>
 
 #include "Camera.hh"
 #include "Mesh.hh"
 #include "Light.hh"
+#include "Texture.hh"
+#include "ColorTexture.hh"
 
 class Camera;
 class Mesh;
@@ -23,6 +26,7 @@ class				Scene {
         std::list<Camera*>			_cameras;
         std::list<Mesh*>			_meshs;
         std::list<Light*>			_lights;
+        std::map<std::string, Texture*>			_textures;
 
     private:
         Scene(const Scene &);

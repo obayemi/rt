@@ -2,7 +2,7 @@
     "objects": [
         {
             "name": "Camera01",
-            "type": "Camera",
+            "object": "Camera",
             "position": {
                 "x": 1.5,
                 "y": 0,
@@ -25,7 +25,8 @@
                 "height": 800
             },
             "background": {
-                "type": "Color",
+                "texture": "Color",
+                "name": "cameraBG",
                 "color": {
                     "r": 20,
                     "g": 20,
@@ -34,38 +35,46 @@
             }
         },
         {
-            "type": "Light",
+            "object": "Light",
+            "light": "Point",
             "position": {"x": 20, "y": 10, "z": 0 },
             "rotation": {"x": 0, "y": 0, "z": 0 },
             "color": {
-                "type": "Color",
+                "texture": "Color",
+                //"name": "light: red-ish",
+                "name" :"ligh",
                 "color": {
                     "r": 255,
-                    "g": 255,
-                    "b": 255
+                    "g": 20,
+                    "b": 20
                 }
             }
         },
         {
-            "type": "Light",
+            "object": "Light",
+            "light": "Point",
             "position": {"x": 3, "y": -5, "z": -1 },
             "rotation": {"x": 0, "y": 0, "z": 0 },
             "color": {
-                "type": "Color",
+                "texture": "Color",
+                "name" :"ligh",
+                //"name": "light: green-ish",
                 "color": {
-                    "r": 255,
+                    "r": 20,
                     "g": 255,
-                    "b": 255
+                    "b": 20
                 }
             }
         },
         {
-            "type": "Mesh",
+            "object": "Mesh",
             "mesh": "Plane",
             "position": {"x": 0, "y": 0, "z": 0 },
             "rotation": {"x": 0, "y": 0, "z": 0 },
-            "color": {
-                "type": "Color",
+            "texture": {
+                "texture": "Color",
+                "name": "gray-ish",
+                //"name": "Plane01Color",
                 "color": {
                     "r": 220,
                     "g": 20,
@@ -74,13 +83,15 @@
             }
         },
         {
-            "type": "Mesh",
+            "object": "Mesh",
             "mesh": "Sphere",
             "position": {"x": 1.2, "y": 1, "z": -1 },
             "rotation": {"x": 0, "y": 0, "z": 0 },
             "radius": 0.2,
-            "color": {
-                "type": "Color",
+            "texture": {
+                "texture": "Color",
+                "name": "gray-ish",
+                //"name": "Sphere01Color",
                 "color": {
                     "r": 255,
                     "g": 218,
@@ -89,13 +100,15 @@
             }
         },
         {
-            "type": "Mesh",
+            "object": "Mesh",
             "mesh": "Sphere",
             "position": {"x": 1, "y": 0, "z": 0 },
             "rotation": {"x": 0, "y": 0, "z": 0 },
             "radius": 1,
-            "color": {
-                "type": "Color",
+            "texture": {
+                "texture": "Color",
+                "name": "gray-ish",
+                //"name": "Sphere02Color",
                 "color": {
                     "r": 125,
                     "g": 38,
@@ -104,14 +117,24 @@
             }
         }
     ],
-    "textures": {
-        "CameraBackground": {
-            "type": "Color",
-            "color": "0x111111ff"
+    "textures": [
+        {
+            "name" :"ligh",
+            "texture": "Color",
+            "color": {
+                "r": 200,
+                "g": 200,
+                "b": 200
+            }
         },
-        "Blue": {
-            "type": "Color",
-            "color": "0x5555ffff"
+        {
+            "name" :"gray-ish",
+            "texture": "Color",
+            "color": {
+                "r": 155,
+                "g": 155,
+                "b": 155
+            }
         }
-    }
+    ]
 }

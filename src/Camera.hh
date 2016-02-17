@@ -23,37 +23,35 @@
 class CameraRay;
 
 class								Camera : public Object {
-    public:
-        static Color				defaultColor;
-
     private:
         double						_focalLength;
         Canevas						_canevas;
         Resolution					_resolution;
 
         unsigned int				_AA;
-        sf::Image					_background;
 
+    private:
         Camera();
 
-   public:
+    public:
         Camera(const Camera &camera);
         Camera(const Position &position, const Rotation &rotation,
                 double focalLength, const Canevas &canevas,
-                const Resolution &resolution = Resolution(0, 0),
-                unsigned int antiAliasing = 0,
-                const Color &color = Camera::defaultColor);
+                const Resolution &resolution,
+                unsigned int antiAliasing,
+                const Texture *texture);
         ~Camera();
 
         void						setAntiAliasing(unsigned int AA);
         void						setResolution(const Resolution &resolition);
         const Resolution			&getResolution() const;
 
-        Color						background(const std::list<Pixel> &pixels) const;
+        Color						background(const std::list<Ray> &rays) const;
 
         std::list<CameraRay *>		getRays() const;
 
-        static Camera				*fromJson(const Json::Value &camera);
+        static Camera				*fromJson(const Json::Value &camera,
+                TextureMap &textures);
 };
 
 

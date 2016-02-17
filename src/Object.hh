@@ -6,13 +6,19 @@
  * \author obayemi
  */
 
+#include <functional>
+
 #include "jsoncpp/json/json.h"
 
 #include "Coordinates.hpp"
+#include "Texture.hh"
 #include "RotMatrix.hh"
 #include "Ray.hh"
 
 class						Object {
+    typedef Object *(JsonLoader)(const Json::Value &value, TextureMap &textures);
+    //typedef std::function<JsonLoader_f> JsonLoader;
+
     private:
         Position			_position;
         Rotation			_rotation;
@@ -20,19 +26,32 @@ class						Object {
         RotMatrix			_rotMatrix;
         RotMatrix			_invRotMatrix;
 
+        const Texture			*_texture;
+
+
     public:
         Object();
         Object(const Object &orig);
-        Object(const Position &position, const Rotation &rotation);
+        Object(const Position &position, const Rotation &rotation,
+                const Texture *texture);
         virtual ~Object();
         const Position		&getPosition() const;
         const Rotation		&getRotation() const;
+        const Texture		*getTexture() const;
 
         void				translate(const Direction &direction);
         void				rotate(const Rotation &rotation);
 
         Ray					localize(const Ray &ray) const;
         Ray					globalize(const Ray &ray) const;
+
+
+    private:
+        static std::map<std::string, JsonLoader*>	_objects;
+    public:
+        static void			registerObject(const std::string &object,
+                JsonLoader *loader);
+        static Object		*fromJson(const Json::Value &value, TextureMap &textures);
 };
 
 

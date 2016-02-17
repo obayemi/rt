@@ -16,3 +16,4 @@ and/or usefull until I get bored.
 * finish phong
 * cell shading
 * ???
+* pointers to static functions for factory

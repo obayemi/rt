@@ -6,14 +6,16 @@
 #include "Plane.hh"
 #include "Exceptions.hh"
 #include "Solver1.hh"
+#include "ColorTexture.hh"
 
 
 Plane::Plane(): Mesh() {}
 
 Plane::Plane(const Plane &orig): Mesh(orig) {}
 
-Plane::Plane(const Position &position, const Rotation &rotation, const Color &color):
-    Mesh(position, rotation, color) {}
+Plane::Plane(const Position &position, const Rotation &rotation,
+        const Texture *texture):
+    Mesh(position, rotation, texture) {}
 
 Plane::~Plane() {}
 
@@ -43,7 +45,11 @@ Intersection			Plane::intersect(const Ray &ray) const {
     throw NoIntersect();
 }
 
-Plane						*Plane::fromJson(const Json::Value &plane) {
+Mesh						*Plane::fromJson(const Json::Value &plane,
+        TextureMap &textures) {
+    if (textures.find(plane["texture"]["name"].asString()) == textures.end()) {
+        textures[plane["texture"]["name"].asString()] = new ColorTexture(plane["texture"]);
+    }
     return new Plane(
             Position(
                 plane["position"]["x"].asDouble(),
@@ -55,10 +61,6 @@ Plane						*Plane::fromJson(const Json::Value &plane) {
                 plane["rotation"]["y"].asDouble(),
                 plane["rotation"]["z"].asDouble()
              )),
-            Color(
-                    plane["color"]["color"]["r"].asUInt(),
-                    plane["color"]["color"]["g"].asUInt(),
-                    plane["color"]["color"]["b"].asUInt()
-                 )
+            textures[plane["texture"]["name"].asString()]
             );
 }

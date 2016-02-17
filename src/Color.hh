@@ -22,9 +22,9 @@ class					Color {
         uint32			_a;
 
     private:
-        Color();
 
     public:
+        Color();
         Color(uint32 color);
         Color(const Color &other);
         Color(uint8 r,uint8 g,uint8 b, uint8 a = 255);

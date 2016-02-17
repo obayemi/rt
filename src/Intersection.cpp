@@ -59,15 +59,19 @@ Color					Intersection::render(const Scene &scene) {
             intersect = NULL;
         }
         if (!intersect) {
-            Color		tmp = this->_mesh.getColor() * light->getColor();
+            Color		tmp = light->getTexture()->getColor(lightRay.getDirection() * -1);
             double angle = lightRay.getDirection() / this->_normal;
             tmp *= (angle > 0 ? angle : 0);
+            /*
+             *std::cout << "light " << light->getPosition() << " " 
+             *    << light->getColor() << " " << tmp << std::endl;
+             */
             color += tmp;
         } else {
             delete intersect;
         }
     }
-    return color;
+    return this->_mesh.getTexture()->getColor(Direction()) * color;
 }
 
 bool					Intersection::operator>(double distance) const {

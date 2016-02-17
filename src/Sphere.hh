@@ -20,12 +20,13 @@ class					Sphere : public Mesh {
         Sphere();
         Sphere(const Sphere &orig);
         Sphere(const Position &position, const Rotation &rotation,
-                double radius = 1,
-                const Color &color = Mesh::defaultColor);
+                double radius,
+                const Texture *texture);
         ~Sphere();
 
         Intersection	intersect(const Ray &ray) const;
-        static Sphere	*fromJson(const Json::Value &sphere);
+        static Mesh*fromJson(const Json::Value &sphere,
+                TextureMap &textures);
 };
 
 #endif // _SPHERE_HH

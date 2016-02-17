@@ -6,27 +6,22 @@
 #include "Camera.hh"
 #include "Color.hh"
 
-Color				Camera::defaultColor = Color(0x111111ff);
-
 Camera::Camera(const Camera &orig):
     Object(orig),
     _focalLength(orig._focalLength),
     _canevas(orig._canevas),
     _resolution(orig._resolution),
-    _AA(orig._AA),
-    _background(orig._background) {}
+    _AA(orig._AA) {}
 
 Camera::Camera(const Position &position, const Rotation &rotation,
         double focalLength, const Canevas &canevas,
         const Resolution &resolution, unsigned int antiAliasing,
-        const Color &color):
-    Object(position, rotation),
+        const Texture *texture):
+    Object(position, rotation, texture),
     _focalLength(focalLength),
     _canevas(canevas),
     _resolution(resolution),
     _AA(antiAliasing) {
-        this->_background.create(this->getResolution().x, this->getResolution().y,
-                sf::Color(color.getR(), color.getG(), color.getB(), color.getA()));
     }
 
 Camera::~Camera() {}
@@ -43,14 +38,12 @@ void						Camera::setResolution(const Resolution &resolution) {
     this->_resolution = resolution;
 }
 
-Color						Camera::background(const std::list<Pixel> &pixels) const {
+Color						Camera::background(const std::list<Ray> &rays) const {
     std::list<Color>		colors;
-    sf::Color				color;
 
 
-    for (const Pixel &pixel: pixels) {
-        color = this->_background.getPixel(pixel.x, pixel.y);
-        colors.push_front(Color(color.r, color.g, color.b, color.a));
+    for (const Ray &ray: rays) {
+        colors.push_front(this->getTexture()->getColor(ray.getDirection()));
     }
     return Color::merge(colors);
 }
@@ -87,18 +80,23 @@ std::list<CameraRay *>		Camera::getRays() const {
     return cameraRays;
 }
 
-Camera						*Camera::fromJson(const Json::Value &camera) {
+Camera						*Camera::fromJson(const Json::Value &camera,
+        TextureMap &textures) {
+    if (textures.find(camera["background"]["name"].asString()) == textures.end()) {
+        textures[camera["background"]["name"].asString()] = new ColorTexture(camera["background"]);
+    }
     return new Camera(
             Position(
                 camera["position"]["x"].asDouble(),
                 camera["position"]["y"].asDouble(),
                 camera["position"]["z"].asDouble()
-             ),
+                ),
             Rotation(Rotation3(
-                camera["rotation"]["x"].asDouble(),
-                camera["rotation"]["y"].asDouble(),
-                camera["rotation"]["z"].asDouble()
-             )),
+                    camera["rotation"]["x"].asDouble(),
+                    camera["rotation"]["y"].asDouble(),
+                    camera["rotation"]["z"].asDouble()
+                    )
+                ),
             camera["focal length"].asDouble(),
             Canevas(
                 camera["canevas"]["width"].asDouble(),
@@ -109,10 +107,6 @@ Camera						*Camera::fromJson(const Json::Value &camera) {
                 camera["resolution"]["height"].asUInt()
                 ),
             camera["MSAA"].asUInt(),
-            Color(
-                    camera["background"]["color"]["r"].asUInt(),
-                    camera["background"]["color"]["g"].asUInt(),
-                    camera["background"]["color"]["b"].asUInt()
-                 )
+            textures[camera["background"]["name"].asString()]
             );
 }

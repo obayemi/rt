@@ -12,6 +12,7 @@
 #include "Scene.hh"
 #include "Color.hh"
 #include "Exceptions.hh"
+#include "TypesInit.hh"
 
 std::mutex				mtx;
 
@@ -56,13 +57,14 @@ void					renderTask(const Scene *scene, sf::Image &image) {
 }
 
 sf::Image				renderman(const Scene &scene, const Camera &camera) {
-    sf::Image		image;
+    sf::Image			image;
     int i = 0;
 
     image.create(camera.getResolution().x, camera.getResolution().y);
     std::cout << "starting render" << std::endl;
     for (CameraRay *cameraRay : camera.getRays()) {
-        std::cout << ++i << std::endl;
+        if (++i % 10000 == 0)
+            std::cout << i << " pixels rendered\r" << std::flush;
         try {
             Color color = cameraRay->render(scene);
 
@@ -78,32 +80,32 @@ sf::Image				renderman(const Scene &scene, const Camera &camera) {
         }
         delete cameraRay;
     }
+    std::cout << std::endl << "render finished" << std::endl;
     return image;
 }
 
-int					main(int ac, char **av)
+int						main(int ac, char **av)
 {
     if (ac != 2) {
         std::cerr << "Usage:" << std::endl
             << av[0] << " <scene.json>" << std::endl;
         return 1;
     }
+    typesInit();
     Scene scene(av[1]);
     std::cout << "Hello world!" << std::endl;
-    //sf::Image image = renderman(scene, *scene.getCamera().front());
-    sf::Image image;
+    sf::Image image = renderman(scene, *scene.getCamera().front());
+    //sf::Image image;
+    //renderTask(&scene, image);
     //std::thread(renderTask, &scene, image);
-    renderTask(&scene, image);
     sf::RenderWindow window(sf::VideoMode(image.getSize().x, image.getSize().y), "RailTracer");
 
     sf::Texture		texture;
     sf::Sprite		sprite;
-    std::cout << "rendered" << std::endl;
 
     texture.loadFromImage(image);
     texture.setSmooth(true);
     sprite.setTexture(texture);
-    std::cout << "imaged" << std::endl;
 
     while (window.isOpen())
     {
