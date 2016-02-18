@@ -24,10 +24,14 @@ class								CameraRay{
         std::list<Ray>				_rays;
         const Camera				&_camera;
         bool						_render;
+        bool						_rendered;
 
     public:
         CameraRay(const Camera &camera, const Ray &ray,
                 const Pixel &pixel, bool render = true);
+
+        bool						getRendered() const;
+        void						setRendered();
 
         Color						render(const Scene &scene) const;
         const std::list<Pixel>		&getPixels() const;

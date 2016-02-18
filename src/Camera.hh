@@ -48,7 +48,7 @@ class								Camera : public Object {
 
         Color						background(const std::list<Ray> &rays) const;
 
-        std::list<CameraRay *>		getRays() const;
+        CameraRay					**getRays() const;
 
         static Camera				*fromJson(const Json::Value &camera,
                 TextureMap &textures);

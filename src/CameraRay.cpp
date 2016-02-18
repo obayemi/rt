@@ -10,9 +10,17 @@
 #include "Exceptions.hh"
 
 CameraRay::CameraRay(const Camera &camera, const Ray &ray,
-        const Pixel &pixel, bool render): _camera(camera), _render(render) {
+        const Pixel &pixel, bool render): _camera(camera), _render(render),
+        _rendered(false) {
     this->_pixels.push_back(pixel);
     this->_rays.push_back(ray);
+}
+
+bool						CameraRay::getRendered() const {
+    return this->_rendered;
+}
+void						CameraRay::setRendered() {
+    this->_rendered |= true;
 }
 
 Color			CameraRay::render(const Scene &scene) const {

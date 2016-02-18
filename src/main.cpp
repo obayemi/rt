@@ -8,6 +8,8 @@
 #include <mutex>
 #include <SFML/Graphics.hpp>
 
+#include <unistd.h>
+
 #include "Coordinates.hpp"
 #include "Scene.hh"
 #include "Color.hh"
@@ -16,21 +18,30 @@
 
 std::mutex				mtx;
 
-void					renderWorker(const Scene *scene, sf::Image &image, std::list<CameraRay *> &rays) {
-    CameraRay		*ray;
-        while (true) {
+void					renderWorker(const Scene &scene, sf::Image &image, CameraRay **rays) {
+    unsigned int		i;
+    unsigned int		size;
+    CameraRay			*ray;
+
+    size = 0;
+    while (rays[size++] != NULL);
+    i = 0;
+    while (true) {
         mtx.lock();
-        if (rays.empty()) {
+        while (rays[i] && rays[i]->getRendered())
+            i++;
+        if (rays[i] == NULL) {
             mtx.unlock();
             return ;
         }
-        ray = rays.front();
-        rays.pop_front();
-        std::cout << rays.size() << std::endl;
+        ray = rays[i];
+        ray->setRendered();
+        if ((i%10000) == 0)
+        std::cout << i * 100 / size  << "% rendered\r" << std::flush;
         mtx.unlock();
 
         try {
-            Color color = ray->render(*scene);
+            Color color = ray->render(scene);
 
             for (Pixel pixel : ray->getPixels()) {
                 image.setPixel(pixel.x, pixel.y,
@@ -42,48 +53,59 @@ void					renderWorker(const Scene *scene, sf::Image &image, std::list<CameraRay 
             }
         } catch (const RenderException &e) {
         }
-        delete ray;
+        ++i;
     }
+
+    std::cout << i * 100 / size  << "% rendered";
+    std::cout << std::endl << "rendered" << std::endl;
 }
 
-void					renderTask(const Scene *scene, sf::Image &image) {
-    Camera				&camera = *scene->getCamera().front();
-    std::list<CameraRay *> rays = camera.getRays();
+void					renderTask(const Scene &scene, sf::Image &image) {
+    Camera				&camera = *scene.getCamera().front();
+    CameraRay			**rays = camera.getRays();
 
     image.create(camera.getResolution().x, camera.getResolution().y);
 
     std::cout << "init worker" << std::endl;
-    renderWorker(scene, image, rays);
-}
+    //std::thread th = std::thread(renderWorker, std::ref(scene), std::ref(image), rays);
+    renderWorker( std::ref(scene), std::ref(image), std::ref(rays));
+    //std::thread(renderWorker, std::ref(scene), std::ref(image), std::ref(rays));
 
-sf::Image				renderman(const Scene &scene, const Camera &camera) {
-    sf::Image			image;
-    int i = 0;
-
-    image.create(camera.getResolution().x, camera.getResolution().y);
-    std::cout << "starting render" << std::endl;
-    for (CameraRay *cameraRay : camera.getRays()) {
-        if (++i % 10000 == 0)
-            std::cout << i << " pixels rendered\r" << std::flush;
-        try {
-            Color color = cameraRay->render(scene);
-
-            for (Pixel pixel : cameraRay->getPixels()) {
-                image.setPixel(pixel.x, pixel.y,
-                        sf::Color(
-                            color.getR(),
-                            color.getG(),
-                            color.getB(),
-                            color.getA()));
-            }
-        } catch (const RenderException &e) {
-        }
-        delete cameraRay;
+    while (*rays) {
+        delete *(rays++);
     }
-    std::cout << std::endl << "render finished" << std::endl;
-    return image;
 }
 
+/*
+ *sf::Image				renderman(const Scene &scene, const Camera &camera) {
+ *    sf::Image			image;
+ *    int i = 0;
+ *
+ *    image.create(camera.getResolution().x, camera.getResolution().y);
+ *    std::cout << "starting render" << std::endl;
+ *    for (CameraRay *cameraRay : camera.getRays()) {
+ *        if (++i % 10000 == 0)
+ *            std::cout << i << " pixels rendered\r" << std::flush;
+ *        try {
+ *            Color color = cameraRay->render(scene);
+ *
+ *            for (Pixel pixel : cameraRay->getPixels()) {
+ *                image.setPixel(pixel.x, pixel.y,
+ *                        sf::Color(
+ *                            color.getR(),
+ *                            color.getG(),
+ *                            color.getB(),
+ *                            color.getA()));
+ *            }
+ *        } catch (const RenderException &e) {
+ *        }
+ *        delete cameraRay;
+ *    }
+ *    std::cout << std::endl << "render finished" << std::endl;
+ *    return image;
+ *}
+ *
+ */
 int						main(int ac, char **av)
 {
     if (ac != 2) {
@@ -94,10 +116,12 @@ int						main(int ac, char **av)
     typesInit();
     Scene scene(av[1]);
     std::cout << "Hello world!" << std::endl;
-    sf::Image image = renderman(scene, *scene.getCamera().front());
-    //sf::Image image;
-    //renderTask(&scene, image);
-    //std::thread(renderTask, &scene, image);
+    //sf::Image image = renderman(scene, *scene.getCamera().front());
+    sf::Image image;
+    std::thread renderthread = std::thread(renderTask, std::ref(scene), std::ref(image));
+    //renderthread.join();
+    //renderTask(scene, image);
+    usleep(1000000);
     sf::RenderWindow window(sf::VideoMode(image.getSize().x, image.getSize().y), "RailTracer");
 
     sf::Texture		texture;
@@ -109,6 +133,7 @@ int						main(int ac, char **av)
 
     while (window.isOpen())
     {
+        usleep(1000);
         sf::Event event;
         while (window.pollEvent(event))
         {

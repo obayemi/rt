@@ -48,10 +48,16 @@ Color						Camera::background(const std::list<Ray> &rays) const {
     return Color::merge(colors);
 }
 
-std::list<CameraRay *>		Camera::getRays() const {
-    std::list<CameraRay *>	cameraRays;
+CameraRay					**Camera::getRays() const {
+    //std::list<CameraRay *>	cameraRays;
+    CameraRay				**cameraRays;
+
     unsigned int			resx = this->_resolution.x;
     unsigned int			resy = this->_resolution.y;
+
+    if ((cameraRays = (CameraRay**)calloc(resx * resy + 1, sizeof *cameraRays)) == NULL) {
+        throw std::exception();
+    }
 
     double					maxx = this->_canevas.x / 2.f;
     double					maxy = this->_canevas.y / 2.f;
@@ -69,7 +75,7 @@ std::list<CameraRay *>		Camera::getRays() const {
             x = (-this->_resolution.x / 2 * pixelsize) + pixelsize * pixx;
             y = (-this->_resolution.y / 2 * pixelsize) + pixelsize * pixy;
 
-            cameraRays.push_back(new CameraRay(*this,
+            cameraRays[pixx + resx * pixy] = (new CameraRay(*this,
                         this->globalize(Ray(Position(), Direction(
                                 -y, x, this->_focalLength))),
                         Pixel(pixx, pixy),
