@@ -83,8 +83,16 @@ class				Vector3 {
                         ));
         }
 
-        Vector3			normalize() {
-            return (this *= (1 / this->length()));
+        Vector3			&normalize() {
+            return (*this *= (1 / this->length()));
+        }
+
+        Vector3			normal() const {
+            return (Vector3(*this).normalize());
+        }
+
+        Vector3			reflect(const Vector3<T> &other) const {
+            return other + (*this * ((other * *this) * -2));
         }
 
         Vector3			&operator+=(const Vector3<T> &other) {
@@ -99,7 +107,7 @@ class				Vector3 {
         }
 
         T				operator/=(const Vector3<T> &other) {
-            return (this->x * other.x + this->y * other.y + this->z * other.z) /
+            return (*this * other) /
                 (this->length() * other.length());
         }
 
@@ -116,6 +124,15 @@ class				Vector3 {
 
         Vector3			operator*(const T &value) const {
             return (Vector3(*this) *= value);
+        }
+
+       T			operator*=(const Vector3<T> &other) {
+            return this->x * other.x + this->y * other.y
+                + this->z * other.z;
+        }
+
+        T			operator*(const Vector3<T> &other) const {
+            return (Vector3(*this) *= other);
         }
         
         friend std::ostream& operator<<(std::ostream& out, const Vector3& vector) {

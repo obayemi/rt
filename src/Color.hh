@@ -45,7 +45,8 @@ class					Color {
         Color			&operator+=(const Color &other);
         Color			operator+(const Color &other) const;
 
-        static Color	merge(const std::list<Color> &colors);
+        static Color	merge(const std::list<Color> &colors,
+                const Color &base = Color(0,0,0,255));
 
         friend std::ostream& operator<<(std::ostream& out, const Color& color);
 };

@@ -8,22 +8,30 @@
 
 #include <iostream>
 #include "Coordinates.hpp"
+#include "Ray.hh"
 
-class Ray {
+class Intersection;
+class Scene;
+class Mesh;
+
+class						Ray {
     private:
         Ray();
 
-    public:
-        Position _origin;
-        Direction _direction;
+    private:
+        Position			_origin;
+        Direction			_direction;
+        unsigned int		_depth;
 
     public:
-        Ray(Position origin, Direction direction);
+        Ray(Position origin, Direction direction, unsigned int depth = 0);
         Ray(const Ray &orig);
         virtual ~Ray();
 
         const Position		&getOrigin() const;
         const Direction		&getDirection() const;
+        unsigned int		getDepth() const;
+        Intersection		*intersect(const Scene &scene, const Mesh *ignore = NULL);
 
         friend std::ostream& operator<<(std::ostream& out, const Ray& ray);
 };

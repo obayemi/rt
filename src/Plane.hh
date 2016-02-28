@@ -21,7 +21,7 @@ class				Plane : public Mesh {
                 const Texture *texture);
         ~Plane();
 
-        Intersection	intersect(const Ray &ray) const;
+        Intersection	*intersect(const Ray &ray) const;
 
         static Mesh		*fromJson(const Json::Value &value,
                 TextureMap &textures);

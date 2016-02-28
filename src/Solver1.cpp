@@ -3,10 +3,10 @@
  * \author obayemi
  */
 
-#include "Solver1.hh"
+#include "Solvers.hh"
 
-Solver1::Solver1(double a, double b) {
-    this->_result.push_front(-b/a);
+std::list<double>			Solvers::Solver1(double a, double b) {
+    std::list<double>		 results;
+    results.push_front(-b/a);
+    return results;
 }
-
-Solver1::~Solver1() {}

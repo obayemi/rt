@@ -27,8 +27,11 @@ class								CameraRay{
         bool						_rendered;
 
     public:
+        CameraRay(const Camera &camera, const std::list<Ray> &rays,
+                const std::list<Pixel> &pixels, bool render = true);
         CameraRay(const Camera &camera, const Ray &ray,
                 const Pixel &pixel, bool render = true);
+        ~CameraRay();
 
         bool						getRendered() const;
         void						setRendered();

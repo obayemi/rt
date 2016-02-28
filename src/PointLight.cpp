@@ -10,7 +10,7 @@ PointLight::PointLight(): Light() {}
 PointLight::PointLight(const PointLight &orig): Light(orig) {}
 
 PointLight::PointLight(const Position &position, const Rotation &rotation,
-        const Texture *texture):Light(position, rotation, texture) {}
+        const Texture *texture):Light(position, rotation, texture, 1) {}
 
 PointLight::~PointLight() {}
 
@@ -19,7 +19,7 @@ Light						*PointLight::fromJson(const Json::Value &light,
     if (textures.find(light["color"]["name"].asString()) == textures.end()) {
         textures[light["color"]["name"].asString()] = Texture::fromJson(light["color"]);
     }
-    return new Light(
+    return new PointLight(
             Position(
                 light["position"]["x"].asDouble(),
                 light["position"]["y"].asDouble(),

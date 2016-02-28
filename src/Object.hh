@@ -15,6 +15,8 @@
 #include "RotMatrix.hh"
 #include "Ray.hh"
 
+class Ray;
+
 class						Object {
     typedef Object *(JsonLoader)(const Json::Value &value, TextureMap &textures);
     //typedef std::function<JsonLoader_f> JsonLoader;
@@ -23,10 +25,11 @@ class						Object {
         Position			_position;
         Rotation			_rotation;
 
+        const Texture			*_texture;
+
+    protected:
         RotMatrix			_rotMatrix;
         RotMatrix			_invRotMatrix;
-
-        const Texture			*_texture;
 
 
     public:

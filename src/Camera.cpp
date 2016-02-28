@@ -3,6 +3,7 @@
  * \author obayemi
  */
 
+#include <cmath>
 #include "Camera.hh"
 #include "Color.hh"
 
@@ -75,10 +76,21 @@ CameraRay					**Camera::getRays() const {
             x = (-this->_resolution.x / 2 * pixelsize) + pixelsize * pixx;
             y = (-this->_resolution.y / 2 * pixelsize) + pixelsize * pixy;
 
+            std::list<Ray>	rays;
+            std::list<Pixel> pixels;
+
+            int aasize = sqrt(this->_AA);
+            for (int aa = this->_AA; aa > 0; aa--) {
+                double xoffset = ((double)(aa % aasize)) * (pixelsize / (double)aasize);
+                double yoffset = ((double)(aa / aasize)) * (pixelsize / (double)aasize);
+                rays.push_back(this->globalize(Ray(Position(), Direction(
+                                    -y + yoffset, x + xoffset, this->_focalLength))));
+            }
+            pixels.push_back(Pixel(pixx, pixy));
+
+
             cameraRays[pixx + resx * pixy] = (new CameraRay(*this,
-                        this->globalize(Ray(Position(), Direction(
-                                -y, x, this->_focalLength))),
-                        Pixel(pixx, pixy),
+                        rays, pixels,
                         ABS(x) <= maxx && ABS(y) <= maxy
                         ));
         }

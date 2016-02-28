@@ -118,10 +118,10 @@ int						main(int ac, char **av)
     std::cout << "Hello world!" << std::endl;
     //sf::Image image = renderman(scene, *scene.getCamera().front());
     sf::Image image;
-    std::thread renderthread = std::thread(renderTask, std::ref(scene), std::ref(image));
+    //std::thread renderthread = std::thread(renderTask, std::ref(scene), std::ref(image));
     //renderthread.join();
-    //renderTask(scene, image);
-    usleep(1000000);
+    renderTask(scene, image);
+    //usleep(1000000);
     sf::RenderWindow window(sf::VideoMode(image.getSize().x, image.getSize().y), "RailTracer");
 
     sf::Texture		texture;
@@ -133,7 +133,7 @@ int						main(int ac, char **av)
 
     while (window.isOpen())
     {
-        usleep(1000);
+        usleep(100000);
         sf::Event event;
         while (window.pollEvent(event))
         {

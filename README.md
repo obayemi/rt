@@ -4,11 +4,10 @@ A raytracer.
 Not intended to be useful or fast, but I'll try any feature that I find fun
 and/or usefull until I get bored.
 
+to use, check git submodules for jsonparser, read its readme to make
+
+
 ## TODO:
-* Use Texture objects instead of Color Objects:
-    * Easier Loading
-    * easier Use
-    * implement perlin noise / real textures
 * polygons
 * more objects
 * more solvers
@@ -17,3 +16,12 @@ and/or usefull until I get bored.
 * cell shading
 * ???
 * pointers to static functions for factory
+* CUDA
+* cmake / configure / whatever multi platform shit
+* bounding optimisations
+* find a better use of textures
+* check / fix rotations
+* improve parser
+
+### DONE
+* Use Texture objects instead of Color Objects:

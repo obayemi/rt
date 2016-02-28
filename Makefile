@@ -14,7 +14,6 @@ SRC_NAMES	= main.cpp \
 			  Mesh.cpp \
 			  Plane.cpp \
 			  Sphere.cpp \
-			  Solver.cpp \
 			  Solver1.cpp \
 			  Solver2.cpp \
 			  ColorTexture.cpp \

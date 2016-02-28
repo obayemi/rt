@@ -9,11 +9,11 @@
 
 Light::Light(): Object() {}
 
-Light::Light(const Light &other): Object(other) {}
+Light::Light(const Light &other): Object(other), _samples(other._samples) {}
 
 Light::Light(const Position &position, const Rotation &rotation,
-        const Texture *texture):
-    Object(position, rotation, texture) {}
+        const Texture *texture, unsigned int samples):
+    Object(position, rotation, texture), _samples(samples) {}
 
 Light::~Light() {}
 
@@ -32,4 +32,8 @@ Light			*Light::fromJson(const Json::Value &value, TextureMap &textures) {
         throw InvalidScene();
     }
     return Light::_lights[value["light"].asString()](value, textures);
+}
+
+unsigned int	Light::getSamples() const {
+    return this->_samples;
 }

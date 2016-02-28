@@ -99,8 +99,10 @@ std::ostream&	operator<<(std::ostream& out, const Color& color) {
         <<")";
 }
 
-Color			Color::merge(const std::list<Color> &colors) {
-    return std::accumulate(colors.begin(), colors.end(), Color(0),
+Color			Color::merge(const std::list<Color> &colors, const Color &base) {
+    if (colors.size() == 0)
+        return base;
+    return std::accumulate(colors.begin(), colors.end(), base,
             [](const Color &a, const Color &b) { return a + b; }) * (1.f / (double)colors.size());
 }
 

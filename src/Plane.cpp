@@ -5,7 +5,7 @@
 
 #include "Plane.hh"
 #include "Exceptions.hh"
-#include "Solver1.hh"
+#include "Solvers.hh"
 #include "ColorTexture.hh"
 
 
@@ -19,13 +19,13 @@ Plane::Plane(const Position &position, const Rotation &rotation,
 
 Plane::~Plane() {}
 
-Intersection			Plane::intersect(const Ray &ray) const {
+Intersection			*Plane::intersect(const Ray &ray) const {
     Ray					localRay = this->localize(ray);
 
-    double distance = Solver1(localRay.getDirection().x, localRay.getOrigin().x).solve().front();
+    double distance = Solvers::Solver1(localRay.getDirection().x, localRay.getOrigin().x).front();
 
     if (distance > 0)
-        return Intersection(
+        return new Intersection(
                 Position(
                     ray.getOrigin().x + distance * ray.getDirection().x,
                     ray.getOrigin().y + distance * ray.getDirection().y,
@@ -42,7 +42,7 @@ Intersection			Plane::intersect(const Ray &ray) const {
                 Direction(1, 0, 0),
                 distance
                 );
-    throw NoIntersect();
+    return NULL;
 }
 
 Mesh						*Plane::fromJson(const Json::Value &plane,

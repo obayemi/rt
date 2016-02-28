@@ -24,7 +24,7 @@ class							Mesh : public Object {
                 const Texture *texture);
         virtual ~Mesh();
 
-        virtual Intersection	intersect(const Ray &ray) const = 0;
+        virtual Intersection	*intersect(const Ray &ray) const = 0;
 
     private:
         static std::map<std::string, JsonLoader*>	_meshs;

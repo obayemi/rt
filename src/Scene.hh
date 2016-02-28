@@ -10,6 +10,7 @@
 #include <string>
 #include <map>
 
+#include "Ray.hh"
 #include "Camera.hh"
 #include "Mesh.hh"
 #include "Light.hh"

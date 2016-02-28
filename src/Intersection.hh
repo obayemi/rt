@@ -6,8 +6,10 @@
  * \author obayemi
  */
 
+#include "Object.hh"
 #include "Exceptions.hh"
 #include "Coordinates.hpp"
+#include "Ray.hh"
 #include "Mesh.hh"
 #include "Color.hh"
 #include "Scene.hh"

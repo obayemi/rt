@@ -4,18 +4,18 @@
  */
 
 #include <cmath>
-#include "Solver2.hh"
+#include <list>
+#include "Solvers.hh"
 
-Solver2::Solver2(double a, double b, double c) {
+std::list<double>			Solvers::Solver2(double a, double b, double c) {
+    std::list<double>		results;
     double D = sqrt( (b*b) - (4*a*c) );
 
     if (D > 0) {
-        this->_result.push_front(( -b - D)/(2*a));
-        this->_result.push_front(( -b + D)/(2*a));
+        results.push_front(( -b - D)/(2*a));
+        results.push_front(( -b + D)/(2*a));
     } else if (D == 0) {
-        this->_result.push_front(( -b )/(2*a));
+        results.push_front(( -b )/(2*a));
     }
+    return results;
 }
-
-Solver2::~Solver2() {}
-

@@ -15,6 +15,11 @@ CameraRay::CameraRay(const Camera &camera, const Ray &ray,
     this->_pixels.push_back(pixel);
     this->_rays.push_back(ray);
 }
+CameraRay::CameraRay(const Camera &camera, const std::list<Ray> &rays,
+                const std::list<Pixel> &pixels, bool render):
+    _pixels(pixels), _rays(rays), _camera(camera), _render(render),  _rendered(false) {}
+
+CameraRay::~CameraRay() {}
 
 bool						CameraRay::getRendered() const {
     return this->_rendered;
@@ -29,16 +34,13 @@ Color			CameraRay::render(const Scene &scene) const {
 
     std::list<Color>		colors;
 
-    Intersection			*intersect = NULL;
     Intersection			*newIntersect = NULL;
 
     for (const Ray& ray : this->_rays) {
+        Intersection			*intersect = NULL;
         for (const Mesh * const mesh: scene.getMesh()) {
-            try {
-                newIntersect = new Intersection(mesh->intersect(ray));
-            } catch (const NoIntersect &e) {
-                continue;
-            }
+            if ((newIntersect = mesh->intersect(ray)) == NULL)
+                continue; // circulez, y'a rien a voir ici ;)
             if (!intersect) {
                 intersect = newIntersect;
             } else {

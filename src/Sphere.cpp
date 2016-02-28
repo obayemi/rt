@@ -5,7 +5,7 @@
 
 #include "Sphere.hh"
 #include "Exceptions.hh"
-#include "Solver2.hh"
+#include "Solvers.hh"
 #include "ColorTexture.hh"
 
 
@@ -19,7 +19,7 @@ Sphere::Sphere(const Position &position, const Rotation &rotation,
 
 Sphere::~Sphere() {}
 
-Intersection			Sphere::intersect(const Ray &ray) const {
+Intersection			*Sphere::intersect(const Ray &ray) const {
     Ray					localRay = this->localize(ray);
     double dx = localRay.getDirection().x;
     double dy = localRay.getDirection().y;
@@ -28,11 +28,11 @@ Intersection			Sphere::intersect(const Ray &ray) const {
     double oy = localRay.getOrigin().y;
     double oz = localRay.getOrigin().z;
 
-    std::list<double> distances = Solver2(
+    std::list<double> distances = Solvers::Solver2(
             dx*dx + dy*dy + dz*dz,
             2*(dx*ox + dy*oy + dz*oz),
             ox*ox + oy*oy + oz*oz - this->_radius
-            ).solve();
+            );
     double distance = -1;
     for (double tmp: distances) {
         if (tmp > 0 && (tmp < distance || distance < 0)) {
@@ -46,7 +46,7 @@ Intersection			Sphere::intersect(const Ray &ray) const {
                     oy + distance * dy,
                     oz + distance * dz
                     );
-        return Intersection(
+        return new Intersection(
                 Position(
                     ray.getOrigin().x + distance * ray.getDirection().x,
                     ray.getOrigin().y + distance * ray.getDirection().y,
@@ -56,11 +56,12 @@ Intersection			Sphere::intersect(const Ray &ray) const {
                 *this,
                 ray,
                 localRay,
+                //this->_rotMatrix * localposition,
                 localposition,
                 distance
                 );
     }
-    throw NoIntersect();
+    return NULL;
 }
 
 Mesh						*Sphere::fromJson(const Json::Value &sphere,

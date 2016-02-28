@@ -24,7 +24,7 @@ class					Sphere : public Mesh {
                 const Texture *texture);
         ~Sphere();
 
-        Intersection	intersect(const Ray &ray) const;
+        Intersection	*intersect(const Ray &ray) const;
         static Mesh*fromJson(const Json::Value &sphere,
                 TextureMap &textures);
 };

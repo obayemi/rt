@@ -12,8 +12,9 @@ Intersection::Intersection(const Intersection &other) :
         _mesh(other._mesh),
         _ray(other._ray),
         _localray(other._localray),
-        _normal(other._normal),
-        _distance(other._distance) {};
+        _normal(other._normal.normal()),
+        _distance(other._distance) {
+        };
 
 Intersection::Intersection(
         const Position &position,
@@ -28,7 +29,7 @@ Intersection::Intersection(
         _mesh(mesh),
         _ray(ray),
         _localray(localray),
-        _normal(normal),
+        _normal(normal.normal()),
         _distance(distance) {}
 ;
 Intersection::~Intersection() {}
@@ -36,42 +37,69 @@ Intersection::~Intersection() {}
 Color					Intersection::render(const Scene &scene) {
     Color				color(0x000000ff);
     Intersection		*intersect;
+    std::list<Color>	colors;
 
     for (const Light * const light: scene.getLight()) {
-        Ray				lightRay(
+        Color			lightTmp(0x000000ff);
+        for (unsigned int i = 0; i < light->getSamples(); i++){
+            Ray				lightRay(
                     Position(this->_position),
                     Direction(light->getPosition() + (this->_position * -1))
-                );
-        intersect = NULL;
-        for (const Mesh * const mesh: scene.getMesh()) {
-            if (mesh == &this->_mesh)
-                continue;
-            try {
-                intersect = new Intersection(mesh->intersect(lightRay));
-            } catch (const NoIntersect &e) {
-                intersect = NULL;
-                continue;
-            }
-            if (*intersect < 1.) {
-                break;
-            }
-            delete intersect;
+                    );
             intersect = NULL;
+            for (const Mesh * const mesh: scene.getMesh()) {
+                if (mesh == &this->_mesh)
+                    continue;
+                if ((intersect = mesh->intersect(lightRay)) == NULL)
+                    continue;
+                if (*intersect < 1.) {
+                    break;
+                }
+                delete intersect;
+                intersect = NULL;
+            }
+            if (!intersect) {
+                Color		tmp = light->getTexture()->getColor(lightRay.getDirection() * -1);
+                double angle = lightRay.getDirection() / this->_normal;
+                tmp *= (angle > 0 ? angle : 0);
+
+                lightTmp += tmp;
+            } else {
+                delete intersect;
+            }
         }
-        if (!intersect) {
-            Color		tmp = light->getTexture()->getColor(lightRay.getDirection() * -1);
-            double angle = lightRay.getDirection() / this->_normal;
-            tmp *= (angle > 0 ? angle : 0);
-            /*
-             *std::cout << "light " << light->getPosition() << " " 
-             *    << light->getColor() << " " << tmp << std::endl;
-             */
-            color += tmp;
-        } else {
+        color += lightTmp * (1.f  / (double)light->getSamples());
+    }
+
+    if (this->_ray.getDepth() < 1 ) {
+        Ray		reflectionRay(this->_position,
+                this->_normal.reflect(this->_ray.getDirection()),
+                this->_ray.getDepth() + 1);
+        /*
+         *std::cout << this->_ray << std::endl 
+         *    << reflectionRay << std::endl;
+         */
+
+        //color = Color(0x000000ff);
+        if ((intersect = reflectionRay.intersect(scene, &this->_mesh)) != NULL) {
+            color = color * 0.5 + (intersect->render(scene) * 0.5);
             delete intersect;
         }
     }
-    return this->_mesh.getTexture()->getColor(Direction()) * color;
+    
+
+    /*
+     *std::cout
+     *    << "light sum: " << color
+     *    << std::endl
+     *    << "texture: " << this->_mesh.getTexture()->getColor(Direction(this->_normal))
+     *    << std::endl
+     *    << "sum: "<< this->_mesh.getTexture()->getColor(Direction(this->_normal)) * color
+     *    << std::endl
+     *    << std::endl;
+     */
+    return this->_mesh.getTexture()->getColor(Direction(this->_normal)) * color;
+    //return color;
 }
 
 bool					Intersection::operator>(double distance) const {

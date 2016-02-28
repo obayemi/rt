@@ -3,23 +3,16 @@
         {
             "name": "Camera01",
             "object": "Camera",
-            "position": {
-                "x": 1.5,
-                "y": 0,
-                "z": -20
-            },
-            "rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
+            "position": { "x": 1.5, "y": 0, "z": -10 },
+            //"position": { "x": 1.5, "y": 0, "z": -20 },
+            "rotation": { "x": 0, "y": 0, "z": 0 },
             "focal length": 45,
             "canevas": {
                 "width": 21,
                 //"height": 16
                 "height": 21
             },
-            "MSAA": 1,
+            "MSAA": 4,
             "resolution": {
                 "width": 800,
                 "height": 800
@@ -41,8 +34,8 @@
             "rotation": {"x": 0, "y": 0, "z": 0 },
             "color": {
                 "texture": "Color",
-                //"name": "light: red-ish",
-                "name" :"ligh",
+                "name": "light: red-ish",
+                //"name" :"ligh",
                 "color": {
                     "r": 255,
                     "g": 20,
@@ -57,8 +50,8 @@
             "rotation": {"x": 0, "y": 0, "z": 0 },
             "color": {
                 "texture": "Color",
-                "name" :"ligh",
-                //"name": "light: green-ish",
+                //"name" :"ligh",
+                "name": "light: green-ish",
                 "color": {
                     "r": 20,
                     "g": 255,
@@ -90,8 +83,8 @@
             "radius": 0.2,
             "texture": {
                 "texture": "Color",
-                "name": "gray-ish",
-                //"name": "Sphere01Color",
+                //"name": "gray-ish",
+                "name": "Sphere01Color",
                 "color": {
                     "r": 255,
                     "g": 218,
@@ -107,8 +100,8 @@
             "radius": 1,
             "texture": {
                 "texture": "Color",
-                "name": "gray-ish",
-                //"name": "Sphere02Color",
+                //"name": "gray-ish",
+                "name": "Sphere02Color",
                 "color": {
                     "r": 125,
                     "g": 38,
