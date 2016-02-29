@@ -8,6 +8,7 @@ to use, check git submodules for jsonparser, read its readme to make
 
 
 ## TODO:
+* use shaders instead of textures, (group of textures map for texture, reflection, etc...)
 * polygons
 * more objects
 * more solvers
