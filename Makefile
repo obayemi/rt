@@ -24,7 +24,7 @@ SRC_NAMES	+= jsoncpp/jsoncpp.cpp
 
 SRCDIR		= src/
 
-SRC			= $(addprefix src/,$(SRC_NAMES))
+SRC			= $(addprefix $(SRCDIR),$(SRC_NAMES))
 OBJ			= $(SRC:.cpp=.o)
 
 
