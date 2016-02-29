@@ -12,8 +12,9 @@ to use, check git submodules for jsonparser, read its readme to make
 * more objects
 * more solvers
 * photon mapping
-* finish phong
+* finish phong (spec light)
 * cell shading
+* other shading techniques
 * ???
 * pointers to static functions for factory
 * CUDA
@@ -22,6 +23,7 @@ to use, check git submodules for jsonparser, read its readme to make
 * find a better use of textures
 * check / fix rotations
 * improve parser
+* MULTI-process/cluster with MPI
 
 ### DONE
 * Use Texture objects instead of Color Objects:
