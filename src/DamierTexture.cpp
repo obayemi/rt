@@ -19,13 +19,14 @@ DamierTexture::DamierTexture(const Json::Value &value) {
 
 DamierTexture::DamierTexture(const Color &color, double size,
                 const Color &fg,
-                const Color &bg): _size(size), _fgColor(fg), _bgColor(bg),  {}
+                const Color &bg): _size(size), _fgColor(fg), _bgColor(bg)
+{}
 
 DamierTexture::~DamierTexture() {};
 
 Color			DamierTexture::getColor(const Position &position) const {
     (void) position;
-    return this->_color;
+    return this->_fgColor;
 }
 
 Texture		*DamierTexture::fromJson(const Json::Value &value) {
