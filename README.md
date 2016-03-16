@@ -19,7 +19,7 @@ to use, check git submodules for jsonparser, read its readme to make
 * ???
 * pointers to static functions for factory
 * CUDA
-* cmake / configure / whatever multi platform shit
+* configure cmake for more platforms
 * bounding optimisations
 * find a better use of textures
 * check / fix rotations
@@ -28,3 +28,4 @@ to use, check git submodules for jsonparser, read its readme to make
 
 ### DONE
 * Use Texture objects instead of Color Objects:
+* cmake configured for Linux
