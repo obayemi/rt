@@ -12,7 +12,7 @@
                 //"height": 16
                 "height": 21
             },
-            "MSAA": 4,
+            "MSAA": 1,
             "resolution": {
                 "width": 800,
                 "height": 800
